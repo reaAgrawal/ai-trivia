@@ -61,15 +61,23 @@ if 'trivia_topic' not in st.session_state:
     st.session_state.trivia_topic = "General Knowledge"
 
 # Enter topic and start new round button
+if 'loading_questions' not in st.session_state:
+    st.session_state.loading_questions = False
 if not st.session_state.round_questions:
     topic = st.text_input("Enter a trivia topic:", value=st.session_state.trivia_topic)
-    if st.button("Start New Trivia Round"):
+    button_label = "Loading..." if st.session_state.loading_questions else "Start New Trivia Round"
+    start_round = st.button(button_label, disabled=st.session_state.loading_questions)
+    if start_round and not st.session_state.loading_questions:
+        st.session_state.loading_questions = True
+        st.rerun()
+    if st.session_state.loading_questions:
         st.session_state.trivia_topic = topic
         questions = get_trivia_questions(topic)
         if questions:
             st.session_state.round_questions = questions
             st.session_state.current_index = 0
             st.session_state.show_answer = False
+        st.session_state.loading_questions = False
         st.rerun()
 
 elif st.session_state.round_questions:
