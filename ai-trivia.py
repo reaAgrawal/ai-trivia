@@ -6,11 +6,11 @@ import os
 
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
-def get_trivia_questions():
-    prompt = """
-    Generate 7 general knowledge trivia questions.
+def get_trivia_questions(topic):
+    prompt = f"""
+    Generate 7 trivia questions about {topic}.
     Respond with JSON only. Do NOT include markdown fences or explanation.
-    Format: [{"question": "...", "answer": "..."}, ...]
+    Format: [{{"question": "...", "answer": "..."}}, ...]
     """
     try:
         model = genai.GenerativeModel("gemini-2.5-flash")  # or "gemini-2.5-pro"
@@ -57,11 +57,15 @@ if 'round_questions' not in st.session_state:
     st.session_state.round_questions = []
     st.session_state.current_index = 0
     st.session_state.show_answer = False
+if 'trivia_topic' not in st.session_state:
+    st.session_state.trivia_topic = "General Knowledge"
 
-# Start new round button
+# Enter topic and start new round button
 if not st.session_state.round_questions:
+    topic = st.text_input("Enter a trivia topic:", value=st.session_state.trivia_topic)
     if st.button("Start New Trivia Round"):
-        questions = get_trivia_questions()
+        st.session_state.trivia_topic = topic
+        questions = get_trivia_questions(topic)
         if questions:
             st.session_state.round_questions = questions
             st.session_state.current_index = 0
@@ -88,11 +92,7 @@ elif st.session_state.round_questions:
         else:
             st.info("🏁 End of round!")
             if st.button("Play Another Round"):
-                questions = get_trivia_questions()
-                if questions:
-                    st.session_state.round_questions = questions
-                    st.session_state.current_index = 0
-                    st.session_state.show_answer = False
-                else:
-                    st.session_state.round_questions = []
+                st.session_state.round_questions = []
+                st.session_state.current_index = 0
+                st.session_state.show_answer = False
                 st.rerun()
