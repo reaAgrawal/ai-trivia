@@ -13,7 +13,7 @@ def get_trivia_questions():
     Format: [{"question": "...", "answer": "..."}, ...]
     """
     try:
-        model = genai.GenerativeModel("gemini-2.5-flash")  # or use "gemini-2.5-pro"
+        model = genai.GenerativeModel("gemini-2.5-flash")  # or "gemini-2.5-pro"
         response = model.generate_content(prompt)
         text = response.text
 
