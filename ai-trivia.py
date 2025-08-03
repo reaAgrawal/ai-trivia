@@ -25,8 +25,32 @@ def get_trivia_questions():
         st.error(f"Could not get questions: {e}")
         return []
 
-# Streamlit app UI
-st.title("🎉 AI Trivia with Gemini 2.5")
+st.markdown(
+    """
+    <style>
+    html, body, .main, [class^='css'] {
+        font-size: 28px !important;
+    }
+    .title {
+        font-size: 48px !important;
+        font-weight: bold;
+        margin-bottom: 0.5em;
+    }
+    .question-heading {
+        font-size: 35px !important;
+        font-weight: 600;
+        margin-top: 1em;
+        margin-bottom: 0.5em;
+    }
+    .stButton>button {
+        font-size: 28px !important;
+        padding: 0.5em 1.5em;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+st.markdown('<div class="title">🎉 AI Trivia with Gemini 2.5</div>', unsafe_allow_html=True)
 
 # Initialize session state
 if 'round_questions' not in st.session_state:
@@ -47,7 +71,7 @@ if not st.session_state.round_questions:
 elif st.session_state.round_questions:
     q = st.session_state.round_questions[st.session_state.current_index]
 
-    st.header(f"Question {st.session_state.current_index + 1}")
+    st.markdown(f'<div class="question-heading">Question {st.session_state.current_index + 1}</div>', unsafe_allow_html=True)
     st.write(q["question"])
 
     if not st.session_state.show_answer:
