@@ -8,7 +8,7 @@ genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 def get_trivia_questions(topic, difficulty):
     prompt = f"""
-    Generate 7 {difficulty} trivia questions about {topic}.
+    Generate 7 trivia questions about {topic}. I want the difficulty level to be {difficulty}/10.
     Respond with JSON only. Do NOT include markdown fences or explanation.
     Format: [{{"question": "...", "answer": "..."}}, ...]
     """
@@ -61,15 +61,15 @@ if 'trivia_topic' not in st.session_state:
     st.session_state.trivia_topic = "General knowledge"
 
 # Enter topic + difficulty and start a new round
-DIFFICULTY_LEVELS = ["easy", "medium", "hard", "very hard"]
+DIFFICULTY_LEVELS = list(range(0, 11))
 if 'loading_questions' not in st.session_state:
     st.session_state.loading_questions = False
 if 'trivia_difficulty' not in st.session_state:
-    st.session_state.trivia_difficulty = "medium"
+    st.session_state.trivia_difficulty = 5
 if not st.session_state.round_questions:
     topic = st.text_input("Enter a trivia topic:", value=st.session_state.trivia_topic)
     difficulty = st.selectbox(
-        "Select difficulty:",
+        "Select difficulty level:",
         DIFFICULTY_LEVELS,
         index=DIFFICULTY_LEVELS.index(st.session_state.trivia_difficulty)
     )
